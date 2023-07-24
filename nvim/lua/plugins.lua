@@ -6,7 +6,6 @@ require('packer').startup(function()
   use {"ellisonleao/gruvbox.nvim"}
   use {"eddyekofo94/gruvbox-flat.nvim"}
   use {"nvim-lua/plenary.nvim"}
-  use {"neovim/nvim-lspconfig"}
   use {"hrsh7th/nvim-cmp"}
   use {"hrsh7th/cmp-buffer"}
   use {"hrsh7th/cmp-path"}
@@ -24,8 +23,18 @@ require('packer').startup(function()
   }
   use {"nvim-telescope/telescope-fzy-native.nvim"}
   use {"kylechui/nvim-surround"}
+  use {"mfussenegger/nvim-dap"}
+  use {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "neovim/nvim-lspconfig",
+      run = ":MasonUpdate" -- :MasonUpdate updates registry contents
+  }
 end)
-
+-- mason
+require("mason").setup()
+require("mason-lspconfig").setup()
+-- c
 -- nvim surround
 require("nvim-surround").setup()
 -- buffline 
@@ -122,7 +131,6 @@ require'nvim-treesitter.configs'.setup {
 -- Autocompletion
 
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
-
 require('luasnip.loaders.from_vscode').lazy_load()
 
 local cmp = require('cmp')
@@ -254,6 +262,7 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
 
 lspconfig.pyright.setup{}
 lspconfig.tsserver.setup{}
+lspconfig.clangd.setup{}
 
 vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'LSP actions',
@@ -285,19 +294,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
     bufmap('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
 
     -- Renames all references to the symbol under the cursor
-    bufmap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>')
+    bufmap('n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>')
 
     -- Selects a code action available at the current cursor position
     bufmap('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
-    bufmap('x', '<F4>', '<cmd>lua vim.lsp.buf.range_code_action()<cr>')
+    -- bufmap('x', '<F4>', '<cmd>lua vim.lsp.buf.range_code_action()<cr>')
+    vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+    vim.keymap.set('n', '<leader>r', vim.diagnostic.setloclist)
 
-    -- Show diagnostics in a floating window
-    bufmap('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>')
-
-    -- Move to the previous diagnostic
-    bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
-
-    -- Move to the next diagnostic
-    bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
   end
 })
