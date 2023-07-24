@@ -17,6 +17,7 @@ require('packer').startup(function()
   use {"nvim-tree/nvim-web-devicons"}
   use {"nvim-treesitter/nvim-treesitter"}
   use {"akinsho/bufferline.nvim"}
+  use {"mfussenegger/nvim-jdtls"}
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.1',
     requires = {{'nvim-lua/plenary.nvim'}}
