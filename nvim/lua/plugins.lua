@@ -6,7 +6,6 @@ require('packer').startup(function()
   use {"ellisonleao/gruvbox.nvim"}
   use {"eddyekofo94/gruvbox-flat.nvim"}
 
-  use {"nvim-lua/plenary.nvim"}
   use {"hrsh7th/nvim-cmp"}
   use {"hrsh7th/cmp-buffer"}
   use {"hrsh7th/cmp-path"}
