@@ -3,17 +3,23 @@ vim.cmd [[packadd packer.nvim]]
 local use = require('packer').use
 require('packer').startup(function()
   use {"wbthomason/packer.nvim"}
+
   use {"ellisonleao/gruvbox.nvim"}
   use {"eddyekofo94/gruvbox-flat.nvim"}
 
-  use {"hrsh7th/nvim-cmp"}
-  use {"hrsh7th/cmp-buffer"}
-  use {"hrsh7th/cmp-path"}
-  use {"saadparwaiz1/cmp_luasnip"}
-  use {"hrsh7th/cmp-nvim-lsp"}
-
   use {"L3MON4D3/LuaSnip"}
   use {"rafamadriz/friendly-snippets"}
+
+  use {
+    "hrsh7th/nvim-cmp",
+    requires = {
+      {"hrsh7th/cmp-buffer"},
+      {"hrsh7th/cmp-path"},
+      {"hrsh7th/cmp-nvim-lsp"}
+    }
+  }
+
+  use {"saadparwaiz1/cmp_luasnip"}
 
   use {"nvim-tree/nvim-tree.lua"}
   use {"nvim-tree/nvim-web-devicons"}
@@ -69,6 +75,7 @@ vim.keymap.set('n', '<leader>f', builtin.find_files, {})
 vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>b', builtin.buffers, {})
 vim.keymap.set('n', '<leader>h', builtin.help_tags, {})
+
 require('telescope').setup{
   defaults = {
     -- Default configuration for telescope goes here:
