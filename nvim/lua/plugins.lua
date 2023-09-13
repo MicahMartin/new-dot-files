@@ -20,10 +20,18 @@ require('packer').startup(function()
   use {"nvim-treesitter/nvim-treesitter"}
 
   use {"akinsho/bufferline.nvim"}
+  use {"simrat39/symbols-outline.nvim"}
   use {"mfussenegger/nvim-jdtls"}
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.1',
     requires = {{'nvim-lua/plenary.nvim'}}
+  }
+  use {
+    "ThePrimeagen/refactoring.nvim",
+    requires = {
+      {"nvim-lua/plenary.nvim"},
+      {"nvim-treesitter/nvim-treesitter"}
+    }
   }
   use {"nvim-telescope/telescope-fzy-native.nvim"}
   use {"kylechui/nvim-surround"}
@@ -50,6 +58,10 @@ vim.opt.termguicolors = true
 -- empty setup using defaults
 require("nvim-tree").setup()
 
+-- Symbol outline
+require("symbols-outline").setup()
+-- LSP Refactoring 
+require('refactoring').setup()
 
 -- Telescope
 local builtin = require('telescope.builtin')
