@@ -1,6 +1,6 @@
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching 
-set ignorecase              " case insensitive 
+" set ignorecase              " case insensitive 
 set hlsearch                " highlight search 
 set incsearch               " incremental search
 set tabstop=2              " number of columns occupied by a tab 
@@ -54,8 +54,8 @@ nnoremap <leader>cf :let @*=expand("%")<CR>
 nnoremap <leader>cF :let @*=expand("%:p")<CR>
 
 set background=dark
-lua require('plugins')
-colorscheme gruvbox-flat
-
 set wildignore=*.0,*~,*.pyc
 set wildignore+=.git,*/node_modules/*,*.pyc,
+
+lua require('plugins')
+

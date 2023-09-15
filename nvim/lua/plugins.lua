@@ -3,34 +3,25 @@ vim.cmd [[packadd packer.nvim]]
 local use = require('packer').use
 require('packer').startup(function()
   use {"wbthomason/packer.nvim"}
-
-  use {"ellisonleao/gruvbox.nvim"}
-  use {"eddyekofo94/gruvbox-flat.nvim"}
-
-  use {"L3MON4D3/LuaSnip"}
-  use {"rafamadriz/friendly-snippets"}
-
   use {
     "hrsh7th/nvim-cmp",
     requires = {
       {"hrsh7th/cmp-buffer"},
       {"hrsh7th/cmp-path"},
+      {"saadparwaiz1/cmp_luasnip"},
       {"hrsh7th/cmp-nvim-lsp"}
     }
   }
-
-  use {"saadparwaiz1/cmp_luasnip"}
-
   use {"nvim-tree/nvim-tree.lua"}
   use {"nvim-tree/nvim-web-devicons"}
   use {"nvim-treesitter/nvim-treesitter"}
 
-  use {"akinsho/bufferline.nvim"}
-  use {"simrat39/symbols-outline.nvim"}
-  use {"mfussenegger/nvim-jdtls"}
+  use {"nvim-telescope/telescope-fzy-native.nvim"}
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.1',
-    requires = {{'nvim-lua/plenary.nvim'}}
+    requires = {
+      {'nvim-lua/plenary.nvim'} 
+    }
   }
   use {
     "ThePrimeagen/refactoring.nvim",
@@ -39,15 +30,18 @@ require('packer').startup(function()
       {"nvim-treesitter/nvim-treesitter"}
     }
   }
-  use {"nvim-telescope/telescope-fzy-native.nvim"}
-  use {"kylechui/nvim-surround"}
-  use {"mfussenegger/nvim-dap"}
   use {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "neovim/nvim-lspconfig",
       run = ":MasonUpdate" -- :MasonUpdate updates registry contents
   }
+  use {"kylechui/nvim-surround"}
+  use {"akinsho/bufferline.nvim"}
+  use {"simrat39/symbols-outline.nvim"}
+  use {"L3MON4D3/LuaSnip"}
+  use {"rafamadriz/friendly-snippets"}
+  use {"ellisonleao/gruvbox.nvim"}
 end)
 -- mason
 require("mason").setup()
@@ -174,6 +168,7 @@ cmp.setup({
     {name = 'luasnip', keyword_length = 2},
   },
   window = {
+    completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered()
   },
   formatting = {
@@ -255,7 +250,10 @@ sign({name = 'DiagnosticSignWarn', text = '▲'})
 sign({name = 'DiagnosticSignHint', text = '⚑'})
 sign({name = 'DiagnosticSignInfo', text = ''})
 vim.diagnostic.config({
-  virtual_text = false,
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = true,
   severity_sort = true,
   float = {
     border = 'rounded',
@@ -320,7 +318,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     bufmap('n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>')
 
     -- Selects a code action available at the current cursor position
-    bufmap('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+    bufmap('n', '<leader>x', '<cmd>lua vim.lsp.buf.code_action()<cr>')
     -- bufmap('x', '<F4>', '<cmd>lua vim.lsp.buf.range_code_action()<cr>')
     vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
@@ -329,3 +327,40 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
   end
 })
+
+local list_snips = function()
+	local ft_list = require("luasnip").available()[vim.o.filetype]
+	local ft_snips = {}
+	for _, item in pairs(ft_list) do
+		ft_snips[item.trigger] = item.name
+	end
+	print(vim.inspect(ft_snips))
+end
+
+vim.api.nvim_create_user_command("SnipList", list_snips, {})
+
+-- setup must be called before loading the colorscheme
+-- Default options:
+require("gruvbox").setup({
+  undercurl = true,
+  underline = true,
+  bold = true,
+  italic = {
+    strings = true,
+    comments = true,
+    operators = false,
+    folds = true,
+  },
+  strikethrough = true,
+  invert_selection = false,
+  invert_signs = false,
+  invert_tabline = false,
+  invert_intend_guides = false,
+  inverse = true, -- invert background for search, diffs, statuslines and errors
+  contrast = "hard", -- can be "hard", "soft" or empty string
+  palette_overrides = {},
+  overrides = {},
+  dim_inactive = false,
+  transparent_mode = false,
+})
+vim.cmd("colorscheme gruvbox")
