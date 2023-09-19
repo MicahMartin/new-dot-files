@@ -13,7 +13,10 @@ require('packer').startup(function()
     }
   }
   use {"nvim-tree/nvim-tree.lua"}
-  use {"nvim-tree/nvim-web-devicons"}
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = { 'nvim-tree/nvim-web-devicons', opt = false }
+  }
   use {"nvim-treesitter/nvim-treesitter"}
 
   use {"nvim-telescope/telescope-fzy-native.nvim"}
@@ -41,7 +44,7 @@ require('packer').startup(function()
   use {"simrat39/symbols-outline.nvim"}
   use {"L3MON4D3/LuaSnip"}
   use {"rafamadriz/friendly-snippets"}
-  use {"ellisonleao/gruvbox.nvim"}
+  use {"eddyekofo94/gruvbox-flat.nvim"}
 end)
 -- mason
 require("mason").setup()
@@ -339,28 +342,88 @@ end
 
 vim.api.nvim_create_user_command("SnipList", list_snips, {})
 
--- setup must be called before loading the colorscheme
--- Default options:
-require("gruvbox").setup({
-  undercurl = true,
-  underline = true,
-  bold = true,
-  italic = {
-    strings = true,
-    comments = true,
-    operators = false,
-    folds = true,
+--  colors
+-- vim.g.gruvbox_flat_style = "dark"
+vim.g.gruvbox_flat_style = "hard"
+vim.cmd[[colorscheme gruvbox-flat]]
+
+-- stylua: ignore
+-- local colors = {
+--   gray     = '#3C3C3C',
+--   lightred = '#D16969',
+--   blue     = '#569CD6',
+--   pink     = '#C586C0',
+--   black    = '#262626',
+--   white    = '#D4D4D4',
+--   green    = '#608B4E',
+-- }
+
+local colors = {
+  green  = '#03B413',
+  blue   = '#2743c7',
+  cyan   = '#00FFFF',
+  black  = '#161A1A',
+  white  = '#c6c6c6',
+  red    = '#b43c29',
+  violet = '#bf3fbd',
+  grey   = '#AAB1BC',
+}
+
+local bubbles_theme = {
+  normal = {
+    a = { fg = colors.black, bg = colors.green, gui = 'bold' },
+    b = { fg = colors.black, bg = colors.grey },
+    c = { fg = colors.black, bg = colors.black },
   },
-  strikethrough = true,
-  invert_selection = false,
-  invert_signs = false,
-  invert_tabline = false,
-  invert_intend_guides = false,
-  inverse = true, -- invert background for search, diffs, statuslines and errors
-  contrast = "hard", -- can be "hard", "soft" or empty string
-  palette_overrides = {},
-  overrides = {},
-  dim_inactive = false,
-  transparent_mode = false,
-})
-vim.cmd("colorscheme gruvbox")
+
+  insert = { a = { fg = colors.black, bg = colors.cyan, gui = 'bold' } },
+  visual = { a = { fg = colors.black, bg = colors.violet, gui = 'bold' } },
+  replace = { a = { fg = colors.black, bg = colors.red, gui = 'bold' } },
+
+  inactive = {
+    a = { fg = colors.white, bg = colors.black },
+    b = { fg = colors.white, bg = colors.black },
+    c = { fg = colors.black, bg = colors.black },
+  },
+}
+-- Override 'encoding': Don't display if encoding is UTF-8.
+encoding = function()
+  local ret, _ = (vim.bo.fenc or vim.go.enc):gsub("^utf%-8$", "")
+  return ret
+end
+
+-- fileformat: Don't display if &ff is unix.
+fileformat = function()
+  local ret, _ = vim.bo.fileformat:gsub("^unix$", "")
+  return ret
+end
+
+require('lualine').setup {
+  options = {
+    theme = bubbles_theme,
+    component_separators = '|',
+    section_separators = { left = '', right = '' },
+  },
+  sections = {
+    lualine_a = {
+      { 'mode', separator = { left = '' }, right_padding = 2 },
+    },
+    lualine_b = { 'filename', 'branch' },
+    lualine_c = { fileformat },
+    lualine_x = {},
+    lualine_y = { 'filetype', 'progress' },
+    lualine_z = {
+      { 'location', separator = { right = '' }, left_padding = 2 },
+    },
+  },
+  inactive_sections = {
+    lualine_a = { 'filename' },
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = { 'location' },
+  },
+  tabline = {},
+  extensions = {},
+}

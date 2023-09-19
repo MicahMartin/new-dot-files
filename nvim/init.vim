@@ -58,4 +58,3 @@ set wildignore=*.0,*~,*.pyc
 set wildignore+=.git,*/node_modules/*,*.pyc,
 
 lua require('plugins')
-
