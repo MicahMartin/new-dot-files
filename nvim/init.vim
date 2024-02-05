@@ -44,6 +44,8 @@ nmap <leader>n :set invnumber<CR>
 " clear the screen, remove search highlights
 nnoremap <C-l> :nohl<CR><C-l>
 
+nmap <leader>R <Plug>RestNvim
+
 """"""""
 " Misc "
 """"""""
